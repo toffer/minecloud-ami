@@ -1,0 +1,83 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          msm-jar-update
+# Required-Start:    $remote_fs $syslog $network $time
+# Required-Stop:     $remote_fs $syslog $network $time
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# X-Start-Before:    msm
+# X-Stop-After:      msm
+# Short-Description: Get latest minecraft jar and set symlink.
+# Description:       Get latest minecraft jar and set symlink.
+### END INIT INFO
+
+# Author: Tom Offermann <tom@offermann.us>
+#
+
+# Do NOT "set -e"
+
+
+# PATH should only include /usr/* if it runs after the mountnfs.sh script
+PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin
+DESC="Get latest minecraft jar and set symlink."
+NAME=msm-jar-update
+SCRIPTNAME=/etc/init.d/$NAME
+
+# Load the VERBOSE setting and other rcS variables
+. /lib/init/vars.sh
+
+# Define LSB log_* functions.
+# Depend on lsb-base (>= 3.2-14) to ensure that this file is present
+# and status_of_proc is working.
+. /lib/lsb/init-functions
+
+#
+# Function that starts the daemon/service
+#
+do_start()
+{
+	# Download latest server.jar and set symlink
+	# Note: I'm using hard-coded <server> and <jargroup> names.
+	SERVER='default'
+	JARGROUP='minecraft'
+	MSM='/usr/local/bin/msm'
+	if [ -x $MSM ]; then
+		$MSM $SERVER jar $JARGROUP
+	else
+		return 2
+	fi
+}
+
+#
+# Function that stops the daemon/service
+#
+do_stop()
+{
+	# Nothing to do on stop.
+	return 1
+}
+
+case "$1" in
+  start)
+	[ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
+	do_start
+	case "$?" in
+		0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
+		2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
+	esac
+	;;
+  stop)
+	[ "$VERBOSE" != no ] && log_daemon_msg "Stopping $DESC" "$NAME"
+	do_stop
+	case "$?" in
+		0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
+		2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
+	esac
+	;;
+  *)
+	echo "Usage: $SCRIPTNAME {start|stop}" >&2
+	exit 3
+	;;
+esac
+
+:

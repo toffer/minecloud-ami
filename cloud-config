@@ -1,0 +1,11 @@
+#cloud-config
+
+# Apt 
+apt_update: true
+apt_upgrade: true
+
+# Install packages
+packages:
+ - git
+ - ruby
+ - puppet

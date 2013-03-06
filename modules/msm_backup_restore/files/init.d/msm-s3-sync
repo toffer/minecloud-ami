@@ -1,0 +1,95 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          msm-s3-sync
+# Required-Start:    $remote_fs $syslog $network $time
+# Required-Stop:     $remote_fs $syslog $network $time
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# X-Start-Before:    msm
+# X-Stop-After:      msm
+# Short-Description: Sync MSM files to S3.
+# Description:       On startup, restore MSM working files from S3
+#                    before running msm start script. On shutdown,
+#					 sync MSM archive and working files to S3 after
+# 					 running msm stop script.
+### END INIT INFO
+
+# Author: Tom Offermann <tom@offermann.us>
+#
+
+# Do NOT "set -e"
+
+# Source /etc/environment to set AWS variables and also
+# include MSM_S3_BUCKET variable in environment
+. /etc/environment
+AWS_VARS="AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY"
+
+# PATH should only include /usr/* if it runs after the mountnfs.sh script
+PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin
+DESC="Sync MSM files to S3"
+NAME=msm-s3-sync
+SCRIPTNAME=/etc/init.d/$NAME
+
+
+# Load the VERBOSE setting and other rcS variables
+. /lib/init/vars.sh
+
+# Define LSB log_* functions.
+# Depend on lsb-base (>= 3.2-14) to ensure that this file is present
+# and status_of_proc is working.
+. /lib/lsb/init-functions
+
+#
+# Function that starts the daemon/service
+#
+do_start()
+{
+	RESTORE_FILES_SCRIPT=/usr/local/bin/msm-restore-working-files-from-s3.sh
+	if [ -x $RESTORE_FILES_SCRIPT ]; then
+		/usr/bin/env $AWS_VARS $RESTORE_FILES_SCRIPT $MSM_S3_BUCKET
+	else
+		return 2
+	fi
+}
+
+#
+# Function that stops the daemon/service
+#
+do_stop()
+{
+	VENV_PYTHON=/usr/local/venv/bin/python
+	BACKUP_WORKING_FILES=/usr/local/bin/msm-backup-working-files-to-s3.py
+	BACKUP_ARCHIVES=/usr/local/bin/msm-backup-archives-to-s3.sh
+
+	if [ -x $VENV_PYTHON ] && [ -x $BACKUP_WORKING_FILES ] && [ -x $BACKUP_ARCHIVES ]; then
+		/usr/bin/env $AWS_VARS $VENV_PYTHON $BACKUP_WORKING_FILES $MSM_S3_BUCKET
+		/usr/bin/env $AWS_VARS $BACKUP_ARCHIVES $MSM_S3_BUCKET
+	 else
+	 	return 2
+	 fi
+}
+
+case "$1" in
+  start)
+	[ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
+	do_start
+	case "$?" in
+		0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
+		2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
+	esac
+	;;
+  stop)
+	[ "$VERBOSE" != no ] && log_daemon_msg "Stopping $DESC" "$NAME"
+	do_stop
+	case "$?" in
+		0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
+		2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
+	esac
+	;;
+  *)
+	echo "Usage: $SCRIPTNAME {start|stop}" >&2
+	exit 3
+	;;
+esac
+
+:
