@@ -36,6 +36,13 @@
         source  => 'puppet:///modules/msm_backup_restore/init.d/msm-log-rotate',
     }
 
+    file {'/etc/init.d/msm-update-auth-lists':
+        owner   => root,
+        group   => root,
+        mode    => 0755,
+        source  => 'puppet:///modules/msm_backup_restore/init.d/msm-update-auth-lists',
+    }
+
     file {'/etc/init.d/msm-update-instance-state':
         owner   => root,
         group   => root,
@@ -80,6 +87,18 @@
         user    => root,
         path    => '/usr/sbin',
         require => Exec['update-rc.d -f msm-log-rotate remove'],
+    }
+
+    exec {'update-rc.d -f msm-update-auth-lists remove':
+        user    => root,
+        path    => '/usr/sbin',
+        require => File['/etc/init.d/msm-update-auth-lists'],
+    }
+
+    exec {'update-rc.d msm-update-auth-lists defaults 96 04':
+        user    => root,
+        path    => '/usr/sbin',
+        require => Exec['update-rc.d -f msm-update-auth-lists remove'],
     }
 
     exec {'update-rc.d -f msm-update-instance-state remove':
