@@ -1,0 +1,84 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          msm-update-auth-lists
+# Required-Start:    $remote_fs $syslog $network $time
+# Required-Stop:     $remote_fs $syslog $network $time
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# X-Start-Before:    msm
+# X-Stop-After:      msm
+# Short-Description: Update white-list.txt and ops.txt.
+# Description:       On startup, update white-list.txt and 
+#                    ops.txt for default Minecraft server.
+### END INIT INFO
+
+# Author: Tom Offermann <tom@offermann.us>
+#
+
+# Do NOT "set -e"
+
+# Source /etc/environment to get DATABASE_URL
+. /etc/environment
+DB_VARS="DATABASE_URL=$DATABASE_URL"
+VENV_PYTHON=/usr/local/venv/bin/python
+UPDATE_AUTH_LISTS=/usr/local/bin/msm-update-auth-lists.py
+
+# PATH should only include /usr/* if it runs after the mountnfs.sh script
+PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin
+DESC="Update white-list.txt and ops.txt."
+NAME=msm-update-auth-lists
+SCRIPTNAME=/etc/init.d/$NAME
+
+# Load the VERBOSE setting and other rcS variables
+. /lib/init/vars.sh
+
+# Define LSB log_* functions.
+# Depend on lsb-base (>= 3.2-14) to ensure that this file is present
+# and status_of_proc is working.
+. /lib/lsb/init-functions
+
+#
+# Function that starts the daemon/service
+#
+do_start()
+{
+    if [ -x $VENV_PYTHON ] && [ -x $UPDATE_AUTH_LISTS ]; then
+        /usr/bin/env $DB_VARS $VENV_PYTHON $UPDATE_AUTH_LISTS
+    else
+        return 2
+    fi
+}
+
+#
+# Function that stops the daemon/service
+#
+do_stop()
+{
+    # Nothing to do on stop.
+    return 1
+}
+
+case "$1" in
+  start)
+    [ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC" "$NAME"
+    do_start
+    case "$?" in
+        0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
+        2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
+    esac
+    ;;
+  stop)
+    [ "$VERBOSE" != no ] && log_daemon_msg "Stopping $DESC" "$NAME"
+    do_stop
+    case "$?" in
+        0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
+        2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
+    esac
+    ;;
+  *)
+    echo "Usage: $SCRIPTNAME {start|stop}" >&2
+    exit 3
+    ;;
+esac
+
+:
