@@ -39,7 +39,7 @@ def get_players(session):
 def get_ops(session):
     """Return list of player names for ops.txt."""
     query = (session.query(User.username)
-                .filter(User.is_superuser == True)
+                .filter(User.is_staff == True)
                 .filter(User.is_active == True)
         		.order_by(User.username)
 	        )
