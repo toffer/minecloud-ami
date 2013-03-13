@@ -1,8 +1,8 @@
-Minecraft-Cloud-Puppet
-======================
+Minecloud-AMI
+=============
 *Build an on-demand Minecraft server on Amazon EC2.*
 
-Minecraft-Cloud-Puppet installs and configures the Minecraft server and various management scripts to build a custom EC2 AMI--one that's designed to back up Minecraft world data to and restore world data from Amazon's S3 service upon server startup and shutdown.
+Minecloud-AMI installs and configures the Minecraft server and various management scripts to build a custom EC2 AMI--one that's designed to back up Minecraft world data to and restore world data from Amazon's S3 service upon server startup and shutdown.
 
 
 Description
@@ -15,7 +15,7 @@ Ideally, an on-demand server should do the following:
 * **Save** your Minecraft world data to S3 periodically while it is running, and upon server shutdown.
 * **Update** the Minecraft server when a new version becomes available.
 
-Minecraft-Cloud-Puppet is designed to create a Minecraft EC2 AMI that does all of the above, using a set of Puppet manifests to build, install and configure the necessary software.
+Minecloud-AMI is designed to create a Minecraft EC2 AMI that does all of the above, using a set of Puppet manifests to build, install and configure the necessary software.
 
 Despite using Puppet, you don't need to know anything about Puppet to create the AMI, since a `build-ami.py` script is included. It launches a stock Ubuntu cloud image on EC2, applies the Puppet manifests, and creates an AMI image for you. (No need to set up a Puppet Master server.)
 
@@ -57,19 +57,19 @@ Setup is a bit involved for building your first AMI, and requires a familiarity 
 
 1. **Set up a virtualenv and activate it.**
 
-    I think this is easiest to do with [`virtualenvwrapper`](https://virtualenvwrapper.readthedocs.org/en/latest/):
+    I think this is easiest to do with [virtualenvwrapper](https://virtualenvwrapper.readthedocs.org/en/latest/):
 
-        $ mkvirtualenv minecraft-cloud
-        $ workon minecraft-cloud
+        $ mkvirtualenv minecloud
+        $ workon minecloud
 
 2. **Clone repository.**
 
-        (minecraft-cloud)$ git clone https://github.com/toffer/minecraft-cloud-puppet
-        (minecraft-cloud)$ cd minecraft-cloud-puppet
+        (minecloud)$ git clone https://github.com/toffer/minecloud-ami
+        (minecloud)$ cd minecloud-ami
 
 3. **Install requirements.**
 
-        (minecraft-cloud)$ pip install -r requirements.txt
+        (minecloud)$ pip install -r requirements.txt
 
 
 Usage
@@ -78,7 +78,7 @@ By default, the `build-ami.py` script will create the custom AMI in the `us-west
 
 * **Build the AMI.**
 
-        (minecraft-cloud)$ ./build-ami.py
+        (minecloud)$ ./build-ami.py
 
 The script takes about 30 minutes to complete. When it finishes, it will output the AMI ID.
 
