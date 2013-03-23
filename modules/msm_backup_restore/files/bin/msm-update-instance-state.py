@@ -8,12 +8,13 @@ import sys
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import NullPool
 
 # Convert from Heroku style DATABASE_URL to Sqlalchemy style, if necessary 
 db_url = os.environ.get('DATABASE_URL')
 DATABASE_URL = re.sub('^postgres:', 'postgresql:', db_url)
 
-engine = create_engine(DATABASE_URL, echo=False)
+engine = create_engine(DATABASE_URL, poolclass=NullPool)
 Base = declarative_base(engine)
 
 class Instance(Base):
