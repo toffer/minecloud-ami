@@ -7,4 +7,5 @@ psutil==0.6.1
 psycopg2==2.4.6
 pygtail==0.2.1
 python-binary-memcached==0.18
+redis==2.7.5
 requests==1.1.0
