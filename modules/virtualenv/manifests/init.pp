@@ -25,10 +25,20 @@ class virtualenv {
         require     => Package['virtualenv'],
     }
 
-    $pip_packages = 'psutil boto-rsync pygtail requests psycopg2 sqlalchemy'
+    file {"/usr/local/venv/requirements.txt":
+        owner       => root,
+        group       => root,
+        mode        => 0644,
+        source      => 'puppet:///modules/virtualenv/requirements.txt',
+        require     => Exec['install-virtualenv'],
+        }
+
+    $pip = '/usr/local/venv/bin/pip'
+    $requirements = '/usr/local/venv/requirements.txt'
     exec {'pip-install-requirements':
-        command     => "/usr/local/venv/bin/pip install ${pip_packages}",
+        command     => "$pip install -r $requirements",
         require     => [Exec['install-virtualenv'],
+                        File['/usr/local/venv/requirements.txt'],
                         Package['python-dev']],
     }
 
