@@ -1,4 +1,4 @@
-    class msm_backup_restore {
+class msm_backup_restore {
 
     file {'/usr/local/bin':
         owner   => root,
@@ -113,6 +113,26 @@
         user    => root,
         path    => '/usr/sbin',
         require => Exec['update-rc.d -f msm-update-instance-state remove'],
+    }
+
+    #
+    # msm-redis-listener configuration (managed by supervisor)
+    #
+    package {'supervisor':
+        ensure  => present,
+    }
+
+    service { 'supervisor':
+        ensure  => running,
+        enable  => true,
+    }
+
+    file {'/etc/supervisor/conf.d/msm-redis-listener.conf':
+        owner   => root,
+        group   => root,
+        mode    => 0644,
+        source  => 'puppet:///modules/msm_backup_restore/supervisor/msm-redis-listener.conf',
+        notify  => Service['supervisor'],
     }
 
 }
