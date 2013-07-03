@@ -1,1 +1,1 @@
-0 * * * *   root    /usr/local/venv/bin/python /usr/local/bin/msm-backup-working-files-to-s3.py
+0 * * * *   minecraft    /usr/local/venv/bin/python /usr/local/bin/msm-backup-working-files-to-s3.py
