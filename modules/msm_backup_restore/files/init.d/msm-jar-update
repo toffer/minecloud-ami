@@ -36,6 +36,14 @@ SCRIPTNAME=/etc/init.d/$NAME
 #
 do_start()
 {
+	# TEMPORARY FIX until msm handles changing download URLs.
+	# Update target.txt file with download URL for latest minecraft
+	# server.
+	UPDATE_DOWNLOAD_URL='/usr/local/bin/msm-update-download-url.py'
+	if [ -x $UPDATE_DOWNLOAD_URL ]; then
+		$UPDATE_DOWNLOAD_URL
+	fi
+
 	# Download latest server.jar and set symlink
 	# Note: I'm using hard-coded <server> and <jargroup> names.
 	SERVER='default'
