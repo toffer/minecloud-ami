@@ -15,7 +15,7 @@ class msm {
         require    => Group['minecraft'],
     }
 
-    $repo_url = 'git://github.com/marcuswhybrow/minecraft-server-manager.git'
+    $repo_url = 'git://github.com/toffer/minecraft-server-manager.git'
     $repo_dir = '/home/minecraft/msm'
     exec {'git_clone_msm':
         user    => 'minecraft',
