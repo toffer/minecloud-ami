@@ -100,8 +100,7 @@ def main():
         update_db('backing up', session)
         update_memcache('backing up')
 
-        cmd_args = ['/usr/bin/sudo',
-                    '/usr/local/bin/msm-pre-shutdown-backup.sh']
+        cmd_args = ['/usr/local/bin/msm-pre-shutdown-backup.sh']
         subprocess.call(cmd_args)
 
         update_db('shutting down')
