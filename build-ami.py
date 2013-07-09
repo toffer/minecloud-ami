@@ -15,7 +15,7 @@ from fabric.network import disconnect_all
 # Edit env defaults to customize AMI.
 #
 env.ec2_region = "us-west-2"
-env.ec2_amis = ['ami-4ac9437a']  # Ubuntu 12.04 LTS amd64 EBS
+env.ec2_amis = ['ami-fb68f8cb']  # Ubuntu 12.04 LTS amd64 EBS
 env.ec2_keypair = 'MinecraftEC2'
 env.ec2_secgroups = ['minecraft']
 env.ec2_instancetype = 'm1.small'
