@@ -2,13 +2,13 @@
 """
 Authorize and manage the running of pre-shutdown backup script.
 
-It should only run if the instance is in the 'running' state.
+It should only run if the instance is in the 'shutting down' state.
 If this kicks off the pre-shutdown backup script, it will
 notify the DB and Memcache about the state changes:
 
 Instance States:
-    'backing up': Backup is starting
-    'shutting down': Backup is complete
+    'backup started'
+    'backup finished'
 
 """
 import bmemcached
@@ -58,7 +58,7 @@ def authorize_backup(session=None):
                 filter(Instance.name == instance_name).
                 one()
                )
-    if instance.state == 'running':
+    if instance.state == 'shutting down':
         authorized = True
     return authorized
 
@@ -97,14 +97,14 @@ def update_memcache(value):
 def main():
     session = loadSession()
     if authorize_backup(session):
-        update_db('backing up', session)
-        update_memcache('backing up')
+        update_db('backup started', session)
+        update_memcache('backup started')
 
         cmd_args = ['/usr/local/bin/msm-pre-shutdown-backup.sh']
         subprocess.call(cmd_args)
 
-        update_db('shutting down')
-        update_memcache('shutting down')
+        update_db('backup finished')
+        update_memcache('backup finished')
 
 
 if __name__ == "__main__":
