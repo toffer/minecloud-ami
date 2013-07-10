@@ -45,12 +45,12 @@ Setup is a bit involved for building your first AMI, and requires familiarity wi
 
 5. **Set local environment variables.**
 
-    Your AWS access key details can be found in the AWS Web console under your user name menu, [Security Credentials] (https://console.aws.amazon.com/iam/home?#security_credential). Set your local environment variables:
+    Your AWS access key details can be found on the AWS Web console page [Security Credentials] (https://console.aws.amazon.com/iam/home?#security_credential):
 
         $ export AWS_ACCESS_KEY_ID=...
         $ export AWS_SECRET_ACCESS_KEY=...
 
-    Name of S3 bucket to store Minecraft world data files.
+    Name of S3 bucket (created in the previous step) to store Minecraft world data files.
 
         $ export MSM_S3_BUCKET=...
 
