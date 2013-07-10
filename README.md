@@ -31,9 +31,7 @@ Setup is a bit involved for building your first AMI, and requires familiarity wi
 
 2. **Import a Key Pair using the [AWS Web console](https://console.aws.amazon.com/).**
 
-	On the local command line generate an SSH key called `MinecraftEC2`.
-	
-	    $ ssh-keygen
+	On the local command line use `$ ssh-keygen` to generate an SSH key called `MinecraftEC2`.
 	
     Upload the public key `MinecraftEC2.pub` to AWS. The `build-ami.py` script will expect the private key `MinecraftEC2` to be located in your `$HOME/.ssh` directory.
 
@@ -45,9 +43,9 @@ Setup is a bit involved for building your first AMI, and requires familiarity wi
 
     Use the AWS Web interface to create an S3 bucket in which to back up your Minecraft world data files.
 
-5. **Set environment variables.**
+5. **Set local environment variables.**
 
-    For AWS access:
+    Your AWS access key details can be found in the AWS Web console under your user name menu, [Security Credentials] (https://console.aws.amazon.com/iam/home?#security_credential). Set your local environment variables:
 
         $ export AWS_ACCESS_KEY_ID=...
         $ export AWS_SECRET_ACCESS_KEY=...
