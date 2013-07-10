@@ -59,10 +59,29 @@ Setup is a bit involved for building your first AMI, and requires familiarity wi
 
 1. **Set up a virtualenv and activate it.**
 
-    I think this is easiest to do with [virtualenvwrapper](https://virtualenvwrapper.readthedocs.org/en/latest/):
+    1. Install 'pip' command. This installs pip in the globally-available, system-wide location.
 
-        $ mkvirtualenv minecloud
-        $ workon minecloud
+    $ sudo easy_install pip
+
+	2. Install 'virtualenv'. Again, this tool will also be globally available.
+
+		$ sudo pip install virtualenv
+
+	3. Create a directory for the minecloud project. This is where you will create a virtualenv and clone the minecloud git repository. 
+
+		$ mkdir ~/minecloud-project
+
+	4. Change directory.
+
+		$ cd ~/minecloud-project
+
+	5. Create a virtualenv called 'venv'.
+
+		$ virtualenv venv
+
+	6. Activate the virtualenv.
+
+		$ source venv/bin/activate
 
 2. **Clone repository.**
 
