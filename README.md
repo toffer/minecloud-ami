@@ -22,7 +22,7 @@ Despite using Puppet, you don't need to know anything about Puppet to create the
 
 Setup
 -----
-Setup is a bit involved for building your first AMI, and requires a familiarity with Amazon Web Services (AWS). The first set of steps involves setting up and configuring your AWS account. The second set is focused on creating a Python virtualenv so that you can run the `build-ami.py` script.
+Setup is a bit involved for building your first AMI, and requires familiarity with Amazon Web Services (AWS) and the Unix (or Mac) command line. The first set of steps involves setting up and configuring your AWS account. The second set is focused on creating a Python virtualenv so that you can run the `build-ami.py` script.
 
 
 ### AWS Account ###
@@ -31,7 +31,11 @@ Setup is a bit involved for building your first AMI, and requires a familiarity 
 
 2. **Import a Key Pair using the [AWS Web console](https://console.aws.amazon.com/).**
 
-    Upload a SSH public key called `MinecraftEC2.pub`. The `build-ami.py` script will expect the private key to be called `MinecraftEC2` and to be located in your `$HOME/.ssh` directory.
+	On the local command line generate an SSH key called `MinecraftEC2`.
+	
+	    $ ssh-keygen
+	
+    Upload the public key `MinecraftEC2.pub` to AWS. The `build-ami.py` script will expect the private key `MinecraftEC2` to be located in your `$HOME/.ssh` directory.
 
 3. **Create a Security Group using the [AWS Web console](https://console.aws.amazon.com/).**
 
