@@ -61,7 +61,7 @@ Setup is a bit involved for building your first AMI, and requires familiarity wi
 
     1. Install 'pip' command. This installs pip in the globally-available, system-wide location.
 
-    $ sudo easy_install pip
+        $ sudo easy_install pip
 
 	2. Install 'virtualenv'. Again, this tool will also be globally available.
 
