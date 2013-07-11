@@ -96,6 +96,9 @@ Setup is a bit involved for building your first AMI, and requires familiarity wi
 Usage
 -----
 By default, the `build-ami.py` script will create the custom AMI in the `us-west-2` region (Oregon). If you want to use a different EC2 region, edit the `env.ec2_region` and `env.ec2_amis` variables near the top of the script.
+A list of regions and their associated codes can be found [here](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html).
+Use the search string '099720109477 ubuntu-precise-12.04-amd64-server' on the public AMIs to find an AMI ID in your region.
+*Note: be sure to import the key pair and create the security group in the same region specified in the script.*
 
 * **Build the AMI.**
 
