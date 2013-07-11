@@ -98,7 +98,6 @@ class msm {
     exec {'msm_update':
         user    => root,
         command => '/etc/init.d/msm update --noinput',
-        # command => '/bin/echo pass',
         require => File['/etc/init.d/msm'],
     }
 
