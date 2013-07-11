@@ -57,16 +57,9 @@ do_start()
 #
 do_stop()
 {
-	VENV_PYTHON=/usr/local/venv/bin/python
-	BACKUP_WORKING_FILES=/usr/local/bin/msm-backup-working-files-to-s3.py
-	BACKUP_ARCHIVES=/usr/local/bin/msm-backup-archives-to-s3.sh
-
-	if [ -x $VENV_PYTHON ] && [ -x $BACKUP_WORKING_FILES ] && [ -x $BACKUP_ARCHIVES ]; then
-		/usr/bin/env $AWS_VARS $VENV_PYTHON $BACKUP_WORKING_FILES $MSM_S3_BUCKET
-		/usr/bin/env $AWS_VARS $BACKUP_ARCHIVES $MSM_S3_BUCKET
-	 else
-	 	return 2
-	 fi
+    # Nothing to do on stop, since backup is handled before shutdown
+    # process even starts.
+    return 1
 }
 
 case "$1" in
