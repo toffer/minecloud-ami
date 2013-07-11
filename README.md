@@ -37,7 +37,7 @@ Setup is a bit involved for building your first AMI, and requires familiarity wi
 
 3. **Create a Security Group using the [AWS Web console](https://console.aws.amazon.com/).**
 
-    It should be called `Minecraft` and should allow inbound traffic on two ports: 22 (SSH), and 25565 (Minecraft).
+    It should be called `minecraft` and should allow inbound traffic on two ports: 22 (SSH), and 25565 (Minecraft).
 
 4. **Create an S3 bucket.**
 
