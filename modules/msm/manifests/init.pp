@@ -95,19 +95,12 @@ class msm {
         require => File['/etc/init.d/msm'],
     }
 
-    exec {'msm_update':
-        user    => root,
-        command => '/etc/init.d/msm update --noinput',
-        # command => '/bin/echo pass',
-        require => File['/etc/init.d/msm'],
-    }
-
     $jar_url = 'https://s3.amazonaws.com/MinecraftDownload/launcher/minecraft_server.jar'
     exec {'msm_jargroup_create':
         user    => root,
         command => "/etc/init.d/msm jargroup create minecraft ${jar_url}",
         creates => '/opt/msm/jars/minecraft',
-        require => Exec['msm_update'],
+        require => File['/etc/init.d/msm'],
     }
 
     exec {'msm_server_create':
