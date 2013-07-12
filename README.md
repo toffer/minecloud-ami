@@ -29,9 +29,13 @@ Setup is a bit involved for building your first AMI, and requires familiarity wi
 
 1. **Set up an [Amazon AWS account](https://aws.amazon.com/) for EC2 and S3.**
 
+    Make a note of your AWS security credentials: AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY.
+
 2. **Import a Key Pair using the [AWS Web console](https://console.aws.amazon.com/).**
 
-	On the local command line use `$ ssh-keygen` to generate an SSH key called `MinecraftEC2`.
+	Generate a new SSH key on your local machine called `MinecraftEC2`.
+
+        $ ssh-keygen -f ~/.ssh/MinecraftEC2
 	
     Upload the public key `MinecraftEC2.pub` to AWS. The `build-ami.py` script will expect the private key `MinecraftEC2` to be located in your `$HOME/.ssh` directory.
 
@@ -45,7 +49,7 @@ Setup is a bit involved for building your first AMI, and requires familiarity wi
 
 5. **Set local environment variables.**
 
-    Your AWS access key details can be found on the AWS Web console page [Security Credentials] (https://console.aws.amazon.com/iam/home?#security_credential):
+    AWS security credentials from Step #1:
 
         $ export AWS_ACCESS_KEY_ID=...
         $ export AWS_SECRET_ACCESS_KEY=...
@@ -59,52 +63,55 @@ Setup is a bit involved for building your first AMI, and requires familiarity wi
 
 1. **Set up a virtualenv and activate it.**
 
-    1. Install 'pip' command. This installs pip in the globally-available, system-wide location.
+    * Install 'pip' command. This installs pip in the global site-packages location.
 
-        $ sudo easy_install pip
+            $ sudo easy_install pip
 
-	2. Install 'virtualenv'. Again, this tool will also be globally available.
+	* Install 'virtualenv'. Again, this tool will also be globally available.
 
-		$ sudo pip install virtualenv
+            $ sudo pip install virtualenv
 
-	3. Create a directory for the minecloud project. This is where you will create a virtualenv and clone the minecloud git repository. 
+	* Create a directory for the minecloud project. This is where you will create a virtualenv and clone the minecloud git repository. 
 
-		$ mkdir ~/minecloud-project
+            $ mkdir ~/minecloud-project
 
-	4. Change directory.
+	* Change directory.
 
-		$ cd ~/minecloud-project
+            $ cd ~/minecloud-project
 
-	5. Create a virtualenv called 'venv'.
+	* Create a virtualenv called 'venv'.
 
-		$ virtualenv venv
+            $ virtualenv venv
 
-	6. Activate the virtualenv.
+	* Activate the virtualenv.
 
-		$ source venv/bin/activate
+            $ source venv/bin/activate
 
 2. **Clone repository.**
 
-        (minecloud)$ git clone https://github.com/toffer/minecloud-ami
-        (minecloud)$ cd minecloud-ami
+        (venv)$ git clone https://github.com/toffer/minecloud-ami
+        (venv)$ cd minecloud-ami
 
 3. **Install requirements.**
 
-        (minecloud)$ pip install -r requirements.txt
+        (venv)$ pip install -r requirements.txt
 
 
 Usage
 -----
-By default, the `build-ami.py` script will create the custom AMI in the `us-west-2` region (Oregon). If you want to use a different EC2 region, edit the `env.ec2_region` and `env.ec2_amis` variables near the top of the script.
-A list of regions and their associated codes can be found [here](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html).
-Use the search string '099720109477 ubuntu-precise-12.04-amd64-server' on the public AMIs list in the AWS console to find an AMI-ID in your region. Alternatively use Canonical's [Amazon EC2 AMI Locator](http://cloud-images.ubuntu.com/locator/ec2/).
-*Note: be sure to import the key pair and create the security group in the same region specified in the script.*
+The `build-ami.py` takes a base Ubuntu 12.04 (Precise Pangolin) AMI and customizes it to create a Mincloud AMI.
+
+By default, the `build-ami.py` script will create the custom AMI in the `us-west-2` region (Oregon). If you want to create an AMI for use in a different EC2 region, edit the `env.ec2_region` near the top of the script. A list of regions and their associated codes can be found [here](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html).
+
+If you select a region different than the default `us-west-2` region, you will also need to change the `env.ec2_amis` variable, since AMI Ids are specific to regions. To find the official Ubuntu 12.04 AMI for your region in the AWS console, use the search string `099720109477 ubuntu-precise-12.04-amd64-server` on the public AMIs list. Alternatively, use Canonical's [Amazon EC2 AMI Locator](http://cloud-images.ubuntu.com/locator/ec2/).
+
+*Note: Be sure to import the key pair and create the security group in the same region specified in the script.*
 
 * **Build the AMI.**
 
-        (minecloud)$ ./build-ami.py
+        (venv)$ ./build-ami.py
 
-The script takes about 30 minutes to complete. When it finishes, it will output the AMI ID.
+The script takes about 20 minutes to complete. When it finishes, it will output the AMI ID.
 
 
 Credits
