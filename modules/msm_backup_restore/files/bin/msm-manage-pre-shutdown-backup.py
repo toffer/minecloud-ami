@@ -52,11 +52,14 @@ class Environ(object):
                 key, val = [x.strip() for x in line.split('=')]
                 self._env_vars[key] = val
 
-    def get(self, var_name):
-        env_var = os.getenv(var_name, None)
+    def get(self, key):
+        env_var = os.getenv(key, None)
         if not env_var:
-            env_var = self._env_vars.get(var_name, None)
+            env_var = self._env_vars.get(key, None)
         return env_var
+
+    def key_val(self, key):
+        return "%s=%s" % (key, self.get(key))
 
 ENVIRON = Environ()
 
@@ -135,7 +138,12 @@ def main():
         update_db('backup started', session)
         update_memcache('backup started')
 
-        cmd_args = ['/usr/local/bin/msm-pre-shutdown-backup.sh']
+        aws_key = ENVIRON.key_val('AWS_ACCESS_KEY_ID')
+        aws_secret = ENVIRON.key_val('AWS_SECRET_ACCESS_KEY')
+        s3_bucket = ENVIRON.key_val('MSM_S3_BUCKET')
+
+        cmd_args = ['/usr/bin/env', aws_key, aws_secret, s3_bucket,
+                    '/usr/local/bin/msm-pre-shutdown-backup.sh']
         subprocess.call(cmd_args)
 
         update_db('backup finished')
