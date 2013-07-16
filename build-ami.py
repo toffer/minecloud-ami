@@ -38,6 +38,11 @@ def launch_instance():
         time.sleep(15)
         instance.update()
 
+    while not instance.public_dns_name:
+        print(_yellow("Waiting for Public DNS"))
+        time.sleep(15)
+        instance.update()
+
     print(_green("Public DNS: %s" % instance.public_dns_name))
     print(_green("Public IP address: %s" % instance.ip_address))
     print(_green("Instance state: %s" % instance.state))
