@@ -125,7 +125,7 @@ class msm_backup_restore {
     file {'/etc/init.d/supervisor':
         owner   => root,
         group   => root,
-        mode    => 0644,
+        mode    => 0755,
         source  => 'puppet:///modules/msm_backup_restore/supervisor/supervisor-init',
         notify  => Service['supervisor'],
     }
