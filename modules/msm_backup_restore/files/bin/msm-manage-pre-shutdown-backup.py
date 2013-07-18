@@ -25,46 +25,12 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import NullPool
 
-class Environ(object):
-    """
-    Lookup values from environment or from file.
-
-    For scripts that require environment variables, but are
-    run from init.d (which does not set env vars defined in
-    '/etc/environment'), Environ provides a way to read variable
-    values directly from a file if they aren't already present in
-    environment.
-
-    Environment file must be in /etc/environment format:
-
-    KEY1=value1
-    KEY2=value2
-    ...
-
-    """
-    def __init__(self, env_filename='/etc/environment'):
-        self._env_vars = {}
-        self._parse_environment_file(env_filename)
-
-    def _parse_environment_file(self, filename):
-        with open(filename, 'r') as f:
-            for line in f:
-                key, val = [x.strip() for x in line.split('=')]
-                self._env_vars[key] = val
-
-    def get(self, key):
-        env_var = os.getenv(key, None)
-        if not env_var:
-            env_var = self._env_vars.get(key, None)
-        return env_var
-
-    def key_val(self, key):
-        return "%s=%s" % (key, self.get(key))
-
-ENVIRON = Environ()
+# Exit early if DATABASE_URL env var is not set.
+db_url = os.getenv('DATABASE_URL', None)
+if not db_url:
+    sys.exit(1)
 
 # Convert from Heroku style DATABASE_URL to Sqlalchemy style, if necessary
-db_url = ENVIRON.get('DATABASE_URL')
 DATABASE_URL = re.sub('^postgres:', 'postgresql:', db_url)
 
 engine = create_engine(DATABASE_URL, poolclass=NullPool)
