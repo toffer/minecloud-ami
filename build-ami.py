@@ -84,9 +84,7 @@ def backup_to_s3():
     with shell_env(AWS_ACCESS_KEY_ID=aws_access_key_id,
                    AWS_SECRET_ACCESS_KEY=aws_secret_access_key,
                    MSM_S3_BUCKET=msm_s3_bucket):
-        sudo('/usr/local/venv/bin/python '
-             '/usr/local/bin/msm-backup-working-files-to-s3.py')
-        sudo('/usr/local/bin/msm-backup-archives-to-s3.sh')
+        sudo('/usr/local/bin/msm-pre-shutdown-backup.sh')
 
 def image_name():
     """
