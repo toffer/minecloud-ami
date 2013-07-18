@@ -80,9 +80,9 @@ def update_db(value, session=None):
 
 def memcache_client():
     client = None
-    servers = ENVIRON.get('MEMCACHIER_SERVERS')
-    username = ENVIRON.get('MEMCACHIER_USERNAME')
-    password = ENVIRON.get('MEMCACHIER_PASSWORD')
+    servers =  os.getenv('MEMCACHIER_SERVERS', None)
+    username = os.getenv('MEMCACHIER_USERNAME', None)
+    password = os.getenv('MEMCACHIER_PASSWORD', None)
 
     if all([servers, username, password]):
         client = bmemcached.Client((servers, ), username, password)
@@ -104,13 +104,8 @@ def main():
         update_db('backup started', session)
         update_memcache('backup started')
 
-        aws_key = ENVIRON.key_val('AWS_ACCESS_KEY_ID')
-        aws_secret = ENVIRON.key_val('AWS_SECRET_ACCESS_KEY')
-        s3_bucket = ENVIRON.key_val('MSM_S3_BUCKET')
-
-        cmd_args = ['/usr/bin/env', aws_key, aws_secret, s3_bucket,
-                    '/usr/local/bin/msm-pre-shutdown-backup.sh']
-        subprocess.call(cmd_args)
+        cmd = ['/usr/local/bin/msm-pre-shutdown-backup.sh']
+        subprocess.call(cmd)
 
         update_db('backup finished')
         update_memcache('backup finished')
