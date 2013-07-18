@@ -122,9 +122,12 @@ class msm_backup_restore {
         ensure  => present,
     }
 
-    service { 'supervisor':
-        ensure  => running,
-        enable  => true,
+    file {'/etc/init.d/supervisor':
+        owner   => root,
+        group   => root,
+        mode    => 0644,
+        source  => 'puppet:///modules/msm_backup_restore/supervisor/supervisor-init',
+        notify  => Service['supervisor'],
     }
 
     file {'/etc/supervisor/conf.d/msm-redis-listener.conf':
@@ -133,6 +136,11 @@ class msm_backup_restore {
         mode    => 0644,
         source  => 'puppet:///modules/msm_backup_restore/supervisor/msm-redis-listener.conf',
         notify  => Service['supervisor'],
+    }
+
+    service { 'supervisor':
+        ensure  => running,
+        enable  => true,
     }
 
 }
