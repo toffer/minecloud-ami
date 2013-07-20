@@ -16,17 +16,26 @@
 
 # Do NOT "set -e"
 
-# Source /etc/environment to get DATABASE_URL
-. /etc/environment
-DB_VARS="DATABASE_URL=$DATABASE_URL"
-VENV_PYTHON=/usr/local/venv/bin/python
-UPDATE_INSTANCE_STATE=/usr/local/bin/msm-update-instance-state.py
+# Include environment variables from /etc/environment
+# to set DATABASE_URL
+#
+# Do this first, so PATH from /etc/environment is
+# overwritten below
+if [ -f /etc/environment ]; then
+    while read LINE
+    do
+        export $LINE
+    done < /etc/environment
+fi
 
 # PATH should only include /usr/* if it runs after the mountnfs.sh script
 PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin
 DESC="Update instance state in DB to 'running'."
 NAME=msm-update-instance-state
 SCRIPTNAME=/etc/init.d/$NAME
+
+VENV_PYTHON=/usr/local/venv/bin/python
+UPDATE_INSTANCE_STATE=/usr/local/bin/msm-update-instance-state.py
 
 # Load the VERBOSE setting and other rcS variables
 . /lib/init/vars.sh
@@ -42,7 +51,7 @@ SCRIPTNAME=/etc/init.d/$NAME
 do_start()
 {
     if [ -x $VENV_PYTHON ] && [ -x $UPDATE_INSTANCE_STATE ]; then
-        /usr/bin/env $DB_VARS $VENV_PYTHON $UPDATE_INSTANCE_STATE running
+        $VENV_PYTHON $UPDATE_INSTANCE_STATE running
     else
         return 2
     fi
@@ -54,7 +63,7 @@ do_start()
 do_stop()
 {
     if [ -x $VENV_PYTHON ] && [ -x $UPDATE_INSTANCE_STATE ]; then
-        /usr/bin/env $DB_VARS $VENV_PYTHON $UPDATE_INSTANCE_STATE terminated
+        $VENV_PYTHON $UPDATE_INSTANCE_STATE terminated
     else
         return 2
     fi
