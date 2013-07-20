@@ -25,8 +25,12 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import NullPool
 
+# Exit early if DATABASE_URL env var is not set.
+db_url = os.getenv('DATABASE_URL', None)
+if not db_url:
+    sys.exit(1)
+
 # Convert from Heroku style DATABASE_URL to Sqlalchemy style, if necessary
-db_url = os.environ.get('DATABASE_URL')
 DATABASE_URL = re.sub('^postgres:', 'postgresql:', db_url)
 
 engine = create_engine(DATABASE_URL, poolclass=NullPool)
