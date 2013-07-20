@@ -1,24 +1,12 @@
 #!/usr/bin/env python
 
 import os
-import re
 import redis
 import subprocess
 import sys
 
-def get_redis_url():
-    """Get redis url from env var, or read it from /etc/environment."""
-    url = os.getenv('REDISTOGO_URL', None)
-    if not url:
-        with open('/etc/environment', 'r') as f:
-            for line in f:
-                match = re.match(r'^REDISTOGO_URL=(.*)', line)
-                if match:
-                    url = match.group(1)
-    return url
-
 def main():
-    redis_url = get_redis_url()
+    redis_url = os.getenv('REDISTOGO_URL', None)
     if not redis_url:
         sys.exit(1)
 
