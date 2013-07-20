@@ -19,10 +19,17 @@
 
 # Do NOT "set -e"
 
-# Source /etc/environment to set AWS variables and also
-# include MSM_S3_BUCKET variable in environment
-. /etc/environment
-AWS_VARS="AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY"
+# Include environment variables from /etc/environment to
+# set AWS variables and MSM_S3_BUCKET.
+#
+# Do this first, so PATH from /etc/environment is
+# overwritten below
+if [ -f /etc/environment ]; then
+    while read LINE
+    do
+        export $LINE
+    done < /etc/environment
+fi
 
 # PATH should only include /usr/* if it runs after the mountnfs.sh script
 PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin
@@ -46,7 +53,7 @@ do_start()
 {
 	RESTORE_FILES_SCRIPT=/usr/local/bin/msm-restore-working-files-from-s3.sh
 	if [ -x $RESTORE_FILES_SCRIPT ]; then
-		/usr/bin/env $AWS_VARS $RESTORE_FILES_SCRIPT $MSM_S3_BUCKET
+		$RESTORE_FILES_SCRIPT $MSM_S3_BUCKET
 	else
 		return 2
 	fi
