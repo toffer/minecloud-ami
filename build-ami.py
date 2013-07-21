@@ -77,15 +77,6 @@ def apply_manifests():
          "--modulepath=/home/ubuntu/puppet-minecraft/modules " +
          "/home/ubuntu/puppet-minecraft/manifests/base.pp")
 
-def backup_to_s3():
-    aws_access_key_id = os.getenv('AWS_ACCESS_KEY_ID')
-    aws_secret_access_key = os.getenv('AWS_SECRET_ACCESS_KEY')
-    msm_s3_bucket = os.getenv('MSM_S3_BUCKET')
-    with shell_env(AWS_ACCESS_KEY_ID=aws_access_key_id,
-                   AWS_SECRET_ACCESS_KEY=aws_secret_access_key,
-                   MSM_S3_BUCKET=msm_s3_bucket):
-        sudo('/usr/local/bin/msm-pre-shutdown-backup.sh')
-
 def image_name():
     """
     Return image name in format 'Minecraft-Server-XXX',
@@ -146,7 +137,6 @@ def main():
     execute(check_instance_availability)
     execute(copy_manifests)
     execute(apply_manifests)
-    execute(backup_to_s3)
     disconnect_all()
     ami_id = create_image(instance.id)
     check_image_availability(ami_id)

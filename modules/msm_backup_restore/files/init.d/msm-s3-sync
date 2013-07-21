@@ -51,9 +51,10 @@ SCRIPTNAME=/etc/init.d/$NAME
 #
 do_start()
 {
-	RESTORE_FILES_SCRIPT=/usr/local/bin/msm-restore-working-files-from-s3.sh
-	if [ -x $RESTORE_FILES_SCRIPT ]; then
-		$RESTORE_FILES_SCRIPT $MSM_S3_BUCKET
+    VENV_PYTHON=/usr/local/venv/bin/python
+    RESTORE_SCRIPT=/usr/local/bin/msm-manage-restore-working-files-from-s3.py
+	if [ -x $RESTORE_SCRIPT ]; then
+		$VENV_PYTHON $RESTORE_SCRIPT
 	else
 		return 2
 	fi
