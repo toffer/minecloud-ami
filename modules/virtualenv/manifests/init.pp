@@ -31,13 +31,22 @@ class virtualenv {
         mode        => 0644,
         source      => 'puppet:///modules/virtualenv/requirements.txt',
         require     => Exec['install-virtualenv'],
-        }
+    }
+
+    # Temporary hack to get around pip 1.4 error.
+    # See https://github.com/toffer/minecloud-ami/issues/8
+    file { '/usr/venv':
+        ensure      => 'link',
+        target      => '/usr/local/venv',
+        require     => Exec['install-virtualenv'],
+    }
 
     $pip = '/usr/local/venv/bin/pip'
     $requirements = '/usr/local/venv/requirements.txt'
     exec {'pip-install-requirements':
         command     => "$pip install -r $requirements",
         require     => [Exec['install-virtualenv'],
+                        File['/usr/venv'],
                         File['/usr/local/venv/requirements.txt'],
                         Package['python-dev']],
     }
