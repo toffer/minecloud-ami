@@ -12,10 +12,16 @@ class virtualenv {
         require    => Package['python-setuptools'],
     }
     
+    exec {"upgrade-setuptools":
+        path        => '/usr/local/bin',
+        command     => "pip install --upgrade --no-use-wheel setuptools",
+        require     => Exec['easy_install pip'],
+    }
+
     package {'virtualenv':
         ensure     => present,
         provider   => pip,
-        require    => Exec['easy_install pip'],
+        require    => Exec['upgrade-setuptools'],
     }
 
     exec {"install-virtualenv":
