@@ -21,7 +21,11 @@ class apt {
         require => Exec['apt-update'],
     }
 
-    $packages = ['rsync', 'screen', 'zip', 'git', 'libpq-dev', 'tree']
+    $packages = [
+        'rsync', 'screen', 'zip', 'git', 'libpq-dev', 'tree',
+        'devscripts', 'debhelper', 'libasound2', 'unixodbc',
+        'libxi6', 'libxt6', 'libxtst6', 'libxrender1', 'rng-tools'
+    ]
     package {$packages:
         ensure  => present,
         require => Exec['apt-upgrade'],
