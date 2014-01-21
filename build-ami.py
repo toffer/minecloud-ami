@@ -47,8 +47,8 @@ def launch_instance():
     print(_green("Public IP address: %s" % instance.ip_address))
     print(_green("Instance state: %s" % instance.state))
     print(_green("Instance ID: %s" % instance.id))
-    print(_green("Waiting 30 seconds for instance to boot..."))
-    time.sleep(30)
+    print(_green("Waiting 60 seconds for instance to boot..."))
+    time.sleep(60)
 
     return instance
 
