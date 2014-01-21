@@ -9,7 +9,8 @@ class oracle_java {
     exec {'git_clone_oab':
         user    => oab,
         path    => '/usr/bin',
-        command => 'git clone git://github.com/flexiondotorg/oab-java6.git /home/oab/oab-java',
+        #command => 'git clone git://github.com/flexiondotorg/oab-java6.git /home/oab/oab-java',
+        command => 'git clone https://github.com/ladios/oab-java6.git /home/oab/oab-java',
         creates => '/home/oab/oab-java',
         require => User['oab'],
     }
